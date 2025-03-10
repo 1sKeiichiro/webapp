@@ -45,3 +45,6 @@ db/sqlite.db
 public/data.sqlite
 public/data.sqlite-shm
 public/data.sqlite-wal
+data/data.sqlite
+data/data.sqlite-shm
+data/data.sqlite-wal
