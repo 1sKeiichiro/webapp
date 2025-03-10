@@ -1,13 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import path from 'path';
-import { existsSync } from 'fs';
+import dbPromise from '@/lib/db';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const dbPath = path.join(process.cwd(), 'public', 'data.sqlite');
-  
-  if (existsSync(dbPath)) {
-    res.status(200).json({ exists: true, path: dbPath });
-  } else {
-    res.status(500).json({ exists: false, path: dbPath });
+  try {
+    const db = await dbPromise;
+    // SQLiteの基本情報取得クエリ
+    const result = await db.all('SELECT name FROM sqlite_master WHERE type="table";');
+    res.status(200).json({ success: true, tables: result });
+  } catch (err: any) {
+    console.error('🚨 詳細エラー情報:', err);
+    res.status(500).json({ success: false, error: err.message || String(err) });
   }
 };
