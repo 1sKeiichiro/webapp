@@ -43,3 +43,5 @@ Thumbs.db
 desktop.ini
 db/sqlite.db
 public/data.sqlite
+public/data.sqlite-shm
+public/data.sqlite-wal

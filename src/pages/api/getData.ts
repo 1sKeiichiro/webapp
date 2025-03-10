@@ -13,8 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const db = await dbPromise;
 
   const stmt = await db.prepare(`
-    SELECT * FROM your_table
-    WHERE g = ? AND l1 = ? AND l2 = ? AND lq = ?
+    SELECT * FROM transmission_data
+    WHERE g = ? AND l_1 = ? AND l_2 = ? AND l_q = ?
     LIMIT 1
   `);
 
@@ -25,17 +25,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const parsedCorrect = record.correct_shape_data ? JSON.parse(record.correct_shape_data) : null;
-    const parsedPredict = record.predict_shape_data ? JSON.parse(record.predict_shape_data) : null;
+    console.log("DB Record:", record); // ✅ デバッグ用ログ
 
-    res.status(200).json({
-      correct: parsedCorrect,
-      predict: parsedPredict,
-    });
+    // JSONパースし、適切なデータ構造に変換
+    const parsedCorrect = record.correct_graph_data ? JSON.parse(record.correct_graph_data).map((item: any) => ({
+      FREQ: item.freq / 1e9, // GHz単位に変換
+      S11_correct: 20 * Math.log10(item.s11), // dB変換
+      S12_correct: 20 * Math.log10(item.s21)  // dB変換
+    })) : [];
+
+    const parsedPredict = record.predicted_graph_data ? JSON.parse(record.predicted_graph_data).map((item: any) => ({
+      FREQ: item.freq / 1e9, // GHz単位に変換
+      S11_predict: 20 * Math.log10(item.s11), // dB変換
+      S12_predict: 20 * Math.log10(item.s21)  // dB変換
+    })) : [];
+
+    const responseData = {
+      correct: {
+        shape: record.correct_shape_data ? JSON.parse(record.correct_shape_data) : "", // ✅ JSONパース
+        data: parsedCorrect
+      },
+      predict: {
+        shape: record.predicted_shape_data ? JSON.parse(record.predicted_shape_data) : "", // ✅ JSONパース
+        data: parsedPredict
+      }
+    };
+
+    console.log("API Response:", responseData); // ✅ APIレスポンスを確認
+    return res.status(200).json(responseData);
+
   } catch (error) {
     console.error('JSON Parsing Error:', error);
-    res.status(500).json({ error: 'Invalid JSON in database' });
-  } finally {
-    await stmt.finalize();
+    return res.status(500).json({ error: 'Invalid JSON in database' });
   }
 }
