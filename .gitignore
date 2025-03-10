@@ -1,0 +1,45 @@
+# Node.js dependencies
+/node_modules
+
+# Next.js build outputs
+/.next/
+/out/
+
+# Environment variables
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log
+pnpm-debug.log
+
+# IDE / Editor config
+.vscode/
+.idea
+.DS_Store
+
+# Miscellaneous
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage
+dist
+build
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Windows desktop.ini
+desktop.ini
+db/sqlite.db
+public/data.sqlite
