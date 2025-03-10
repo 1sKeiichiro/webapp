@@ -11,7 +11,7 @@ const OUTPUT_PATH = path.join(OUTPUT_DIR, 'data.sqlite');
 async function downloadDB() {
   if (!existsSync(OUTPUT_DIR)) mkdirSync(OUTPUT_DIR, { recursive: true });
   console.log('Downloading DB from GitHub Releases...');
-  const res = await axios.get(DB_URL, { responseType: 'arraybuffer' as const });
+  const res = await axios.get<ArrayBuffer>(DB_URL, { responseType: 'arraybuffer' });
   writeFileSync(OUTPUT_PATH, Buffer.from(res.data));
   console.log('✅ DB downloaded successfully!');
 }

@@ -3,6 +3,6 @@
     { "src": "next.config.js", "use": "@vercel/next" }
   ],
   "functions": {
-    "api/**/*.ts": { "includeFiles": ["data/**"] }
+    "api/**/*.ts": { "includeFiles": "data/**" }
   }
 }
