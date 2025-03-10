@@ -1,10 +1,9 @@
-// lib/db.ts
-import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import fs from 'fs';
+import sqlite3 from 'sqlite3';
 import path from 'path';
+import fs from 'fs';
 
-const DB_PATH = path.join(process.cwd(), 'public', 'data.sqlite');
+const DB_PATH = path.join(process.cwd(), 'data', 'data.sqlite');
 
 if (!fs.existsSync(DB_PATH)) {
   throw new Error(`Database file not found at path: ${DB_PATH}`);
@@ -12,7 +11,7 @@ if (!fs.existsSync(DB_PATH)) {
 
 const dbPromise = open({
   filename: DB_PATH,
-  driver: sqlite3.Database
+  driver: sqlite3.Database,
 });
 
 export default dbPromise;
